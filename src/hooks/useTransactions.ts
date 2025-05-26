@@ -276,21 +276,95 @@ export const useTransactions = (): UseTransactionsReturn => {
   // Export to Excel
   const exportToExcel = async () => {
     try {
-      // This would typically use the XLSX library to generate an Excel file
-      // For now, this is a placeholder
-      toast.success('Excel export feature will be implemented');
+      const XLSX = await import('xlsx');
+      
+      // Prepare data for export
+      const exportData = filteredTransactions.map(transaction => ({
+        Date: format(new Date(transaction.date), 'dd/MM/yyyy'),
+        'Main Account': transaction.main_account.name,
+        'Sub Account': transaction.sub_account.name,
+        Description: transaction.description,
+        Debit: transaction.type === 'debit' ? transaction.amount : '',
+        Credit: transaction.type === 'credit' ? transaction.amount : '',
+        Amount: transaction.amount,
+        Type: transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)
+      }));
+
+       // Add summary row
+       exportData.push({
+        Date: '',
+        'Main Account': 'TOTAL',
+        'Sub Account': '',
+        Description: '',
+        Debit: totalDebit,
+        Credit: totalCredit,
+        Amount: balance,
+        Type: 'Balance'
+      });
+      
+      // Create workbook and worksheet
+      const ws = XLSX.utils.json_to_sheet(exportData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Transactions');
+      
+      // Generate filename with date
+      const filename = `transactions_${format(new Date(), 'yyyy-MM-dd')}.xlsx`;
+      
+      // Save file
+      XLSX.writeFile(wb, filename);
+      
+      toast.success('Excel file exported successfully');
     } catch (error: any) {
       console.error('Error exporting to Excel:', error);
       toast.error('Failed to export to Excel');
     }
   };
 
-  // Export to PDF
-  const exportToPdf = async () => {
+   // Export to PDF
+   const exportToPdf = async () => {
     try {
-      // This would typically use jsPDF to generate a PDF file
-      // For now, this is a placeholder
-      toast.success('PDF export feature will be implemented');
+      const jsPDF = (await import('jspdf')).default;
+      await import('jspdf-autotable');
+      
+      // Create new PDF document
+      const doc = new jsPDF();
+      
+      // Add title
+      doc.setFontSize(18);
+      doc.text('Transaction Report', 14, 22);
+      
+      // Add date
+      doc.setFontSize(11);
+      doc.text(`Generated on: ${format(new Date(), 'dd/MM/yyyy HH:mm')}`, 14, 32);
+      
+      // Add summary
+      doc.text(`Total Credit: ${formatCurrency(totalCredit)}`, 14, 42);
+      doc.text(`Total Debit: ${formatCurrency(totalDebit)}`, 14, 48);
+      doc.text(`Balance: ${formatCurrency(balance)}`, 14, 54);
+      
+      // Prepare table data
+      const tableData = filteredTransactions.map(transaction => [
+        format(new Date(transaction.date), 'dd/MM/yyyy'),
+        transaction.main_account.name,
+        transaction.sub_account.name,
+        transaction.description,
+        transaction.type === 'debit' ? formatCurrency(transaction.amount) : '-',
+        transaction.type === 'credit' ? formatCurrency(transaction.amount) : '-'
+      ]);
+      
+      // Add table
+      (doc as any).autoTable({
+        head: [['Date', 'Main Account', 'Sub Account', 'Description', 'Debit', 'Credit']],
+        body: tableData,
+        startY: 60,
+        styles: { fontSize: 9 },
+        headStyles: { fillColor: [30, 64, 175] }
+      });
+      
+      // Save PDF
+      doc.save(`transactions_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+      
+      toast.success('PDF file exported successfully');
     } catch (error: any) {
       console.error('Error exporting to PDF:', error);
       toast.error('Failed to export to PDF');
