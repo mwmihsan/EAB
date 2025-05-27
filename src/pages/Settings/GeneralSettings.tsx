@@ -112,6 +112,7 @@ const GeneralSettings: React.FC = () => {
   }, []);
 
   const currencyOptions = [
+    { value: 'Rs', label: 'Srilankan Rupee (Rs)' },
     { value: '₹', label: 'Indian Rupee (₹)' },
     { value: '$', label: 'US Dollar ($)' },
     { value: '€', label: 'Euro (€)' },

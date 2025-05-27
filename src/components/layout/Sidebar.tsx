@@ -83,31 +83,27 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, toggleSidebar }) =>
             )}
           </div>
 
-          {/* Navigation */}
+          {/* Navigation - All items visible to all users */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             <NavLink to="/" className={navLinkClass} onClick={handleNavigation}>
               <LayoutDashboard className="h-5 w-5 mr-3" />
               {!isCollapsed && <span>Dashboard</span>}
             </NavLink>
             
-            {user?.role === 'admin' && (
-              <NavLink to="/daybook" className={navLinkClass} onClick={handleNavigation}>
-                <BookOpen className="h-5 w-5 mr-3" />
-                {!isCollapsed && <span>Daybook</span>}
-              </NavLink>
-            )}
+            <NavLink to="/daybook" className={navLinkClass} onClick={handleNavigation}>
+              <BookOpen className="h-5 w-5 mr-3" />
+              {!isCollapsed && <span>Daybook</span>}
+            </NavLink>
             
             <NavLink to="/ledger" className={navLinkClass} onClick={handleNavigation}>
               <BookText className="h-5 w-5 mr-3" />
               {!isCollapsed && <span>Ledger</span>}
             </NavLink>
             
-            {user?.role === 'admin' && (
-              <NavLink to="/settings" className={navLinkClass} onClick={handleNavigation}>
-                <Settings className="h-5 w-5 mr-3" />
-                {!isCollapsed && <span>Settings</span>}
-              </NavLink>
-            )}
+            <NavLink to="/settings" className={navLinkClass} onClick={handleNavigation}>
+              <Settings className="h-5 w-5 mr-3" />
+              {!isCollapsed && <span>Settings</span>}
+            </NavLink>
           </nav>
 
           {/* User info and logout */}

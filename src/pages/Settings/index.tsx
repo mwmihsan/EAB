@@ -11,16 +11,6 @@ const Settings: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('general');
 
-  // Only admin can access settings
-  if (user?.role !== 'admin') {
-    return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <div className="text-error-600 text-xl font-semibold mb-2">Access Denied</div>
-        <p className="text-neutral-600">You do not have permission to view this page.</p>
-      </div>
-    );
-  }
-
   const tabs = [
     { id: 'general', label: 'General', icon: <SettingsIcon className="h-5 w-5" /> },
     { id: 'accounts', label: 'Accounts', icon: <CreditCard className="h-5 w-5" /> },

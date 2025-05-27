@@ -86,16 +86,6 @@ const Daybook: React.FC = () => {
     setRunningBalance(balances);
   }, [filteredTransactions]);
 
-  // Only admin can access daybook
-  if (user?.role !== 'admin') {
-    return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <div className="text-error-600 text-xl font-semibold mb-2">Access Denied</div>
-        <p className="text-neutral-600">You do not have permission to view this page.</p>
-      </div>
-    );
-  }
-
   const handleEdit = (transaction: any) => {
     setEditingTransaction(transaction);
     setIsFormOpen(true);

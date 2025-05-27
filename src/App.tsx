@@ -57,7 +57,7 @@ const AppRoutes = () => {
         </>
       } />
       
-      {/* Protected routes */}
+      {/* Protected routes - All accessible to any authenticated user */}
       <Route path="/" element={
         <ProtectedRoute>
           <Layout />
