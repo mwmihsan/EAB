@@ -33,46 +33,43 @@ const App = () => {
 
 const AppRoutes = () => {
   const { user, loading } = useAuth();
-  
-  // Redirect to dashboard if user is logged in
-  const handleAuthRedirect = () => {
-    if (loading) return null;
-    return user ? <Navigate to="/" replace /> : null;
-  };
 
   return (
     <Routes>
       {/* Auth routes */}
-      <Route path="/login" element={
-        <>
-          {handleAuthRedirect()}
-          <Login />
-        </>
-      } />
-      
-      <Route path="/register" element={
-        <>
-          {handleAuthRedirect()}
-          <Register />
-        </>
-      } />
-      
-      {/* Protected routes - All accessible to any authenticated user */}
-      <Route path="/" element={
-        <ProtectedRoute>
-          <Layout />
-        </ProtectedRoute>
-      }>
+      <Route
+        path="/login"
+        element={
+          loading ? null : user ? <Navigate to="/" replace /> : <Login />
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          loading ? null : user ? <Navigate to="/" replace /> : <Register />
+        }
+      />
+
+      {/* Protected routes */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Dashboard />} />
         <Route path="daybook" element={<Daybook />} />
         <Route path="ledger" element={<Ledger />} />
         <Route path="settings" element={<Settings />} />
       </Route>
-      
-      {/* Fallback route */}
+
+      {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
+
 
 export default App;
