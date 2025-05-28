@@ -3,6 +3,9 @@ import { supabase } from '../lib/supabase';
 import type { Transaction, TransactionWithDetails, TransactionFilters } from '../types';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
+//import jsPDF from 'jspdf';
+import { formatCurrency } from './utils/currency';
+
 
 interface UseTransactionsReturn {
   transactions: TransactionWithDetails[];
@@ -18,7 +21,7 @@ interface UseTransactionsReturn {
   deleteTransaction: (id: string) => Promise<boolean>;
   applyFilters: (filters: TransactionFilters) => void;
   exportToExcel: () => Promise<void>;
-  exportToPdf: () => Promise<void>;
+  //exportToPdf: () => Promise<void>;
   undoTransaction: (id: string) => Promise<boolean>;
 }
 
@@ -321,7 +324,7 @@ export const useTransactions = (): UseTransactionsReturn => {
   };
 
    // Export to PDF
-   const exportToPdf = async () => {
+   /*const exportToPdf = async () => {
     try {
       const jsPDF = (await import('jspdf')).default;
       await import('jspdf-autotable');
@@ -369,7 +372,7 @@ export const useTransactions = (): UseTransactionsReturn => {
       console.error('Error exporting to PDF:', error);
       toast.error('Failed to export to PDF');
     }
-  };
+  };*/
 
   return {
     transactions,
@@ -385,7 +388,7 @@ export const useTransactions = (): UseTransactionsReturn => {
     deleteTransaction,
     applyFilters,
     exportToExcel,
-    exportToPdf,
+    //exportToPdf,
     undoTransaction,
   };
 };
