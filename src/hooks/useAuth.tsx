@@ -2,6 +2,11 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '../lib/supabase';
 import type { User, AuthState } from '../types';
 
+// Debug environment variables
+console.log('🌍 Environment check:');
+console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+console.log('Supabase Key exists:', !!import.meta.env.VITE_SUPABASE_ANON_KEY);
+
 interface AuthContextType extends AuthState {
   signIn: (email: string, password: string) => Promise<{ error: any | null }>;
   signUp: (email: string, password: string, role?: 'admin' | 'user') => Promise<{ error: any | null, user: any | null }>;
@@ -17,17 +22,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [state, setState] = useState<AuthState>({
     user: null,
     session: null,
-    loading: true,
+    loading: false,
   });
 
   // Initialize auth state
   useEffect(() => {
     let isMounted = true; // Prevent state updates after unmount
 
-    const getInitialSession = async () => {
-      try {
-        // Get current session
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+   const getInitialSession = async () => {
+  console.log('🔍 Getting initial session...');
+  try {
+    // Get current session
+    console.log('🔗 Testing Supabase connection...');
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    console.log('📦 Session result:', session);
+    console.log('❌ Session error:', sessionError);
         
         if (sessionError) {
           console.error('Error getting session:', sessionError);
