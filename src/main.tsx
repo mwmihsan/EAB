@@ -7,7 +7,7 @@ import { Toaster } from 'react-hot-toast';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Router>
+    <Router future={{ v7_relativeSplatPath: true }}>
       <App />
       <Toaster 
         position="top-right"
